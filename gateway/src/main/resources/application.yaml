@@ -1,0 +1,66 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: gatewayService
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:mysql://${hm.db.host}:${hm.db.port}/db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${hm.db.un}
+    password: ${hm.db.pw}
+  cloud:
+    nacos:
+      server-addr: ${spring.nacos.server-addr} # nacos地址
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*" # spring boot2.4配置
+            # allowed-origins: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+            allowed-methods:
+              - GET
+              - POST
+              - DELETE
+              - PUT
+              - OPTION
+      routes:
+        - id: user # 路由规则id，自定义，唯一
+          uri: lb://userService # 路由的目标服务，lb代表负载均衡，会从注册中心拉取服务列表
+          predicates: # 路由断言，判断当前请求是否符合当前规则，符合则路由到目标服务
+            - Path=/api/user/** # 这里是以请求路径作为判断规则
+        - id: subject
+          uri: lb://subjectService
+          predicates:
+            - Path=/api/subject/**
+        - id: prompt
+          uri: lb://subjectService
+          predicates:
+            - Path=/api/prompt/**
+        - id: message
+          uri: lb://messageService
+          predicates:
+            - Path=/api/userMessage/**
+        - id: tts
+          uri: lb://TTS
+          predicates:
+            - Path=/api/tts/*
+
+
+  main:
+    web-application-type: reactive
+hm:
+  jwt:
+    location: classpath:hmall.jks # 秘钥地址
+    alias: hmall # 秘钥别名
+    password: hmall123 # 秘钥文件密码
+    tokenTTL: 30m # 登录有效期
+  auth:
+    excludePaths: # 无需登录校验的路径
+      - /api/user/loginJwt
+      - /api/user/**
+      - /api/subject/hello2
+
