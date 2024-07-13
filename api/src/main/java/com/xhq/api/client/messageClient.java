@@ -2,11 +2,10 @@ package com.xhq.api.client;
 
 import com.xhq.api.config.DefaultFeignConfig;
 import com.xhq.api.dto.AskDto;
-import com.xhq.api.dto.Subject;
 import com.xhq.api.dto.NewPromoptChatDTO;
+import com.xhq.api.dto.Subject;
 import com.xhq.api.dto.UserChatHistoryVO;
 import com.xhq.common.domain.Result;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

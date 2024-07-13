@@ -1,4 +1,4 @@
-package com.xhq.messageservice.domain;
+package com.xhq.common.domain;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;

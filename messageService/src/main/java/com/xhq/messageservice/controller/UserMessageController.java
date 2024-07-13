@@ -2,20 +2,16 @@ package com.xhq.messageservice.controller;
 
 
 import com.xhq.common.domain.Result;
-import com.xhq.messageservice.domain.AskDto;
-import com.xhq.messageservice.domain.NewPromoptChatDTO;
-import com.xhq.messageservice.domain.Subject;
-import com.xhq.messageservice.domain.UserChatHistoryVO;
+import com.xhq.messageservice.domain.*;
 import com.xhq.messageservice.service.UserMessageService;
 import com.xhq.messageservice.service.dl2;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 @RestController()
@@ -53,6 +49,22 @@ public class UserMessageController {
         return Result.success(ans);
     }
 
+    /**
+     * 用户发起问题，并携带历史聊天主题的id,异步消息队列回答
+     * @param dto
+     * @return
+     */
+    @PostMapping("/askQuestion3")
+    @ApiOperation("用户询问")
+    public Result userAskQuestion3(@RequestBody AskDto dto){
+        if(dto.getSubjectId()==null||dto.getQuestion()==null){
+            return Result.error("提问为空");
+        }
+        Integer status=userMessageService.commitAnswer(dto);
+        return Result.success();
+    }
+
+
 
     @PostMapping("/getUserChatHistory")
     @ApiOperation("得到用户某个对话的历史记录返回前端")
@@ -63,7 +75,7 @@ public class UserMessageController {
 
         UserChatHistoryVO  userChatHistory=userMessageService.getUserChatHistory(subject1);
         if(userChatHistory==null){
-            return Result.error("redis没有该用户该subjectId的对话");
+            return Result.error("没有该用户该subjectId的对话");
         }
         return Result.success(userChatHistory);
     }

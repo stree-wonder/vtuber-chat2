@@ -2,9 +2,7 @@ package com.xhq.messageservice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xhq.api.dto.Subject;
-import com.xhq.messageservice.domain.NewPromoptChatDTO;
-import com.xhq.messageservice.domain.UserChatHistoryVO;
-import com.xhq.messageservice.domain.UserMessage;
+import com.xhq.messageservice.domain.*;
 
 
 public interface UserMessageService extends IService<UserMessage> {
@@ -15,4 +13,10 @@ public interface UserMessageService extends IService<UserMessage> {
     Long newPromoptChat(NewPromoptChatDTO newPromoptChatDTO);
 
     void deleteChatMessageByUserIdAndSubjectId(Subject subject);
+
+    Integer commitAnswer(AskDto dto);
+
+    UserMessage getMessageByMessageId(String messageId);
+
+    String generateAnswer(String s, Long subjectId);
 }

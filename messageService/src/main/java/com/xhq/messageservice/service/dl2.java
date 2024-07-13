@@ -24,8 +24,6 @@ import java.util.List;
 @Component
 public class dl2 {
 
-
-
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 

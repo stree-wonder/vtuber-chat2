@@ -10,7 +10,7 @@ spring:
   application:
     name: messageService
   profiles:
-    active: dev
+    active: local
   cloud:
     sentinel:
       transport:
